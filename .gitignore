@@ -165,6 +165,7 @@ $RECYCLE.BIN/
 *.userprefs
 *.StyleCop
 *.sdf
+*.project.lock.json
 GeneratedAssemblyInfo.cs
 StyleCop.Cache
 local.settings.include

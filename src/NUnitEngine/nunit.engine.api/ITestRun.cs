@@ -24,7 +24,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if NETSTANDARD1_6
+using System.Xml.Linq;
+#else
 using System.Xml;
+#endif
 
 namespace NUnit.Engine
 {
@@ -33,11 +37,19 @@ namespace NUnit.Engine
     /// </summary>
     public interface ITestRun
     {
+#if NETSTANDARD1_6
+        /// <summary>
+        /// Get the result of the test.
+        /// </summary>
+        /// <returns>An XNode representing the test run result</returns>
+        XNode Result { get; }
+#else
         /// <summary>
         /// Get the result of the test.
         /// </summary>
         /// <returns>An XmlNode representing the test run result</returns>
         XmlNode Result { get; }
+#endif
 
         /// <summary>
         /// Blocks the current thread until the current test run completes

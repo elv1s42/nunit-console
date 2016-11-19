@@ -22,7 +22,11 @@
 // ***********************************************************************
 
 using System.IO;
+#if NETSTANDARD1_6
+using System.Xml.Linq;
+#else
 using System.Xml;
+#endif
 
 namespace NUnit.Engine.Extensibility
 {
@@ -40,6 +44,21 @@ namespace NUnit.Engine.Extensibility
         /// <param name="outputPath"></param>
         void CheckWritability(string outputPath);
 
+#if NETSTANDARD1_6
+        /// <summary>
+        /// Writes result to the specified output path.
+        /// </summary>
+        /// <param name="resultNode">XNode for the result</param>
+        /// <param name="outputPath">Path to which it should be written</param>
+        void WriteResultFile(XNode resultNode, string outputPath);
+
+        /// <summary>
+        /// Writes result to a TextWriter.
+        /// </summary>
+        /// <param name="resultNode">XNode for the result</param>
+        /// <param name="writer">TextWriter to which it should be written</param>
+        void WriteResultFile(XNode resultNode, TextWriter writer);
+#else
         /// <summary>
         /// Writes result to the specified output path.
         /// </summary>
@@ -53,5 +72,6 @@ namespace NUnit.Engine.Extensibility
         /// <param name="resultNode">XmlNode for the result</param>
         /// <param name="writer">TextWriter to which it should be written</param>
         void WriteResultFile(XmlNode resultNode, TextWriter writer);
+#endif
     }
 }

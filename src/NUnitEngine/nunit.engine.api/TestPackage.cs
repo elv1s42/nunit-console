@@ -33,7 +33,9 @@ namespace NUnit.Engine
     /// tests for one or more test files. TestPackages may be named 
     /// or anonymous, depending on how they are constructed.
     /// </summary>
+#if !NETSTANDARD1_6
     [Serializable]
+#endif
     public class TestPackage
     {
         #region Constructors

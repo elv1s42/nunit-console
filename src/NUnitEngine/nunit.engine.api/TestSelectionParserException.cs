@@ -30,7 +30,9 @@ namespace NUnit.Engine
     /// TestSelectionParserException is thrown when an error 
     /// is found while parsing the selection expression.
     /// </summary>
+#if !NETSTANDARD1_6
     [Serializable]
+#endif
     public class TestSelectionParserException : Exception
     {
         /// <summary>
@@ -45,9 +47,11 @@ namespace NUnit.Engine
         /// <param name="innerException"></param>
         public TestSelectionParserException(string message, Exception innerException) : base(message, innerException) { }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Serialization constructor
         /// </summary>
         public TestSelectionParserException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
     }
 }

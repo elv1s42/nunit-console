@@ -31,7 +31,9 @@ namespace NUnit.Engine
     /// called with improper values or when a particular facility
     /// is not available.
     /// </summary>
+#if !NETSTANDARD1_6
     [Serializable]
+#endif
     public class NUnitEngineException : Exception
     {
         /// <summary>
@@ -46,9 +48,11 @@ namespace NUnit.Engine
         /// <param name="innerException"></param>
         public NUnitEngineException(string message, Exception innerException) : base(message, innerException) { }
 
+#if !NETSTANDARD1_6
         /// <summary>
         /// Serialization constructor
         /// </summary>
         public NUnitEngineException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
     }
 }

@@ -27,6 +27,10 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
 
+#if NETSTANDARD1_6
+using System.Linq;
+#endif
+
 namespace NUnit.Engine
 {
     /// <summary>
@@ -43,6 +47,34 @@ namespace NUnit.Engine
         private const string NunitInstallRegKeyWow64 = @"SOFTWARE\Wow6432Node\Nunit.org\Engine";
 
         #region Public Methods
+
+#if NETSTANDARD1_6
+
+        /// <summary>
+        /// Create an instance of the test engine.
+        /// </summary>
+        /// <remarks>If private copy is false, the search order is the NUnit install directory for the current user, then
+        /// the install directory for the local machine and finally the current AppDomain's ApplicationBase.</remarks>
+        /// <exception cref="NUnitEngineNotFoundException">Thrown when the test engine is not found</exception>
+        /// <exception cref="NUnitEngineException">Thrown when the ITestEngine is not found in the test engine</exception>
+        /// <returns>An <see cref="NUnit.Engine.ITestEngine"/></returns>
+        public static ITestEngine CreateInstance()
+        {
+            Assembly engine = Assembly.Load(new AssemblyName("NUnit.Engine"));
+            if(engine == null)
+            {
+                throw new NUnitEngineNotFoundException();
+            }
+
+            TypeInfo testEngineType = engine.DefinedTypes.FirstOrDefault(t => t.FullName == DefaultTypeName);
+            if (engine == null)
+            {
+                throw new NUnitEngineException("Could not find type " + DefaultTypeName + " in the engine");
+            }
+            return (ITestEngine)Activator.CreateInstance(testEngineType.AsType());
+        }
+
+#else
 
         /// <summary>
         /// Create an instance of the test engine.
@@ -88,10 +120,13 @@ namespace NUnit.Engine
                 throw new Exception("Failed to load the test engine", ex);
             }
         }
+#endif
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
+
+#if !NETSTANDARD1_6
 
         private static Assembly FindNewestEngine(Version minVersion, bool privateCopy)
         {
@@ -218,7 +253,8 @@ namespace NUnit.Engine
             catch (Exception) { }
             return null;
         }
+#endif
 
-        #endregion
+#endregion
     }
 }
